@@ -13,7 +13,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Split Keyboard API",
     description="API for split keyboard comparison website",
-    version="1.0.0"
+    version="3.1.0"
 )
 
 # CORS configuration
