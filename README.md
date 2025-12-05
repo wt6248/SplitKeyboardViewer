@@ -270,7 +270,7 @@ MIT License
 
 ## 기여
 
-이슈 및 Pull Request는 언제나 환영합니다!
+이슈 및 Pull Request는 처음이라 버벅일 예정입니다.
 
 ## 문의
 
