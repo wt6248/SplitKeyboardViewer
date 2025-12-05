@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(pip install:*)",
+      "Bash(python run.py:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)",
+      "Bash(test_keyboard.jpg)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc2NDk0NTM2MX0.TrnS1jI8W88sPfy-V-cVtq_Oe-SYUkmGoBGU0XahI2M\")",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run dev:*)",
+      "Bash(node test_integration.js:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0YWRtaW4iLCJleHAiOjE3NjQ5Nzg2Mzl9.Z-K_wad1LRCwd6sdES0z7_RWonGghjwIJ7Ix6mxa7eE\")",
+      "Bash(node test_phase4.js:*)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
