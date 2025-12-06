@@ -16,7 +16,7 @@ ssh ubuntu@your-server-ip
 ### 설정 스크립트 실행
 ```bash
 # 스크립트 다운로드
-wget https://raw.githubusercontent.com/your-username/split-keyboard/main/deployment/setup-server.sh
+wget https://raw.githubusercontent.com/wt6248/SplitKeyboardViewer/main/deployment/setup-server.sh
 
 # 실행 권한 부여
 chmod +x setup-server.sh

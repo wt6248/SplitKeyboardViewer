@@ -23,7 +23,8 @@ const MainPage: React.FC = () => {
 
   // 초기 로드 시 또는 새로운 키 개수가 추가되었을 때 전체 키 개수 범위 업데이트
   useEffect(() => {
-    const ranges = keyboards.map(kb => kb.key_count_range).filter(Boolean);
+    if (!keyboards || keyboards.length === 0) return;
+    const ranges = keyboards.map(kb => kb?.key_count_range).filter(Boolean);
     const uniqueRanges = Array.from(new Set(ranges)).sort();
 
     // 새로운 키 개수가 있으면 추가

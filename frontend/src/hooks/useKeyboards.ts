@@ -76,9 +76,9 @@ export const useKeyboards = (filters: FilterState) => {
       }
 
       const response = await getKeyboards(params);
-      setKeyboards(response.keyboards);
-      setTotal(response.total);
-      setTotalPages(response.total_pages);
+      setKeyboards(response?.keyboards || []);
+      setTotal(response?.total || 0);
+      setTotalPages(response?.total_pages || 0);
     } catch (err: any) {
       setError(err.message || '키보드 목록을 가져오는데 실패했습니다');
     } finally {
