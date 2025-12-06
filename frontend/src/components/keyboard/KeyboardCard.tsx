@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Keyboard } from '../../types/keyboard';
 import { useComparison } from '../../context/ComparisonContext';
+import { API_BASE_URL } from '../../services/api';
 import reactLogo from '../../assets/react.svg';
 
 interface KeyboardCardProps {
@@ -26,7 +27,7 @@ const KeyboardCard: React.FC<KeyboardCardProps> = ({ keyboard }) => {
       {/* Image */}
       <div className="relative">
         <img
-          src={keyboard.image_url}
+          src={`${API_BASE_URL}${keyboard.image_url}`}
           alt={keyboard.name}
           className="w-full h-48 object-cover"
           onError={(e) => {

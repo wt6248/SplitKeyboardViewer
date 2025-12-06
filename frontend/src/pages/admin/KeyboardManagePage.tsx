@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getKeyboards, deleteKeyboard, createKeyboard, updateKeyboard } from '../../services/keyboardService';
 import type { Keyboard } from '../../types/keyboard';
+import { API_BASE_URL } from '../../services/api';
 import Modal from '../../components/common/Modal';
 import KeyboardForm from '../../components/admin/KeyboardForm';
 
@@ -124,7 +125,7 @@ const KeyboardManagePage: React.FC = () => {
               <tr key={keyboard.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <img
-                    src={keyboard.image_url}
+                    src={`${API_BASE_URL}${keyboard.image_url}`}
                     alt={keyboard.name}
                     className="h-12 w-20 object-cover rounded"
                   />

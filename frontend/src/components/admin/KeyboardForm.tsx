@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Keyboard, KeyRange } from '../../types/keyboard';
+import { API_BASE_URL } from '../../services/api';
 
 interface KeyboardFormProps {
   keyboard?: Keyboard;
@@ -36,7 +37,7 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
       setHasDisplay(keyboard.tags.has_display);
       setHasColumnStagger(keyboard.tags.has_column_stagger);
       setHasSplay(keyboard.tags.has_splay);
-      setImagePreview(keyboard.image_url);
+      setImagePreview(`${API_BASE_URL}${keyboard.image_url}`);
     }
   }, [keyboard]);
 

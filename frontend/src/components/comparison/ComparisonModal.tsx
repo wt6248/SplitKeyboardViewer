@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useComparison } from '../../context/ComparisonContext';
+import { API_BASE_URL } from '../../services/api';
 
 const ComparisonModal: React.FC = () => {
   const { isModalOpen, selectedKeyboards, closeModal } = useComparison();
@@ -72,10 +73,10 @@ const ComparisonModal: React.FC = () => {
               <ComparisonRow
                 label="이미지"
                 value1={
-                  <img src={kb1.image_url} alt={kb1.name} className="w-32 h-24 object-cover rounded" />
+                  <img src={`${API_BASE_URL}${kb1.image_url}`} alt={kb1.name} className="w-32 h-24 object-cover rounded" />
                 }
                 value2={
-                  <img src={kb2.image_url} alt={kb2.name} className="w-32 h-24 object-cover rounded" />
+                  <img src={`${API_BASE_URL}${kb2.image_url}`} alt={kb2.name} className="w-32 h-24 object-cover rounded" />
                 }
               />
               <ComparisonRow
