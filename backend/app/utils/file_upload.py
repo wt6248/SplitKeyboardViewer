@@ -2,6 +2,10 @@ import os
 import uuid
 from fastapi import UploadFile, HTTPException
 from typing import List
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
@@ -9,8 +13,9 @@ ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 # Maximum file size (5MB)
 MAX_FILE_SIZE = 5 * 1024 * 1024
 
-# Upload directory
-UPLOAD_DIR = "uploads"
+# Upload directory - use environment variable or default to "uploads"
+# In production, this should be set to an absolute path like /var/lib/split-keyboard/uploads
+UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
 
 
 def validate_image_file(file: UploadFile) -> None:

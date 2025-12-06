@@ -34,12 +34,15 @@ nano .env
 `.env` 파일에서 다음 설정:
 ```env
 SECRET_KEY=your-generated-secret-key-here
+UPLOAD_DIR=/var/lib/split-keyboard/uploads
 ```
 
 SECRET_KEY 생성:
 ```bash
 python3 -c "import secrets; print(secrets.token_hex(32))"
 ```
+
+**중요**: `UPLOAD_DIR`을 `/var/lib/split-keyboard/uploads`로 설정하여 업로드된 파일이 올바른 위치에 저장되도록 합니다.
 
 ### 관리자 계정 생성
 ```bash

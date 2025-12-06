@@ -5,6 +5,7 @@ import os
 
 from .database import engine, Base
 from .routers import keyboards, admin
+from .utils.file_upload import UPLOAD_DIR
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -29,10 +30,12 @@ app.add_middleware(
 )
 
 # Mount static files directory for uploads
-if not os.path.exists("uploads"):
-    os.makedirs("uploads")
+# UPLOAD_DIR is configured via environment variable (default: "uploads")
+# In production, use absolute path like /var/lib/split-keyboard/uploads
+if not os.path.exists(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Include routers
 app.include_router(keyboards.router)
