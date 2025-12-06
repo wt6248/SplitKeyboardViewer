@@ -1,5 +1,5 @@
-// 키 개수 범위
-export type KeyRange = 'full' | 'tkl' | 'compact' | '40' | '30';
+// 키 개수 범위 (문자열로 자유롭게 입력 가능)
+export type KeyRange = string;
 
 // 정렬 옵션
 export type SortOption = 'name_asc' | 'name_desc' | 'price_asc' | 'price_desc';

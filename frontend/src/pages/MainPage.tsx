@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFilters } from '../hooks/useFilters';
 import { useKeyboards } from '../hooks/useKeyboards';
 import KeyboardGrid from '../components/keyboard/KeyboardGrid';
@@ -7,10 +7,51 @@ import SearchBar from '../components/keyboard/SearchBar';
 import SortSelector from '../components/keyboard/SortSelector';
 import ComparisonBar from '../components/comparison/ComparisonBar';
 import ComparisonModal from '../components/comparison/ComparisonModal';
+import type { FilterState } from '../types/keyboard';
 
 const MainPage: React.FC = () => {
-  const { filters, updateFilter, toggleKeyRange, resetFilters } = useFilters();
-  const { keyboards, loading, error, total, fetchKeyboards } = useKeyboards(filters);
+  // 로컬 필터 상태 (사용자가 선택 중인 필터)
+  const { filters: localFilters, updateFilter: updateLocalFilter, toggleKeyRange: toggleLocalKeyRange, resetFilters: resetLocalFilters } = useFilters();
+
+  // 실제 적용된 필터 상태 (API 호출에 사용)
+  const [appliedFilters, setAppliedFilters] = useState<FilterState>(localFilters);
+
+  const { keyboards, loading, error, total, fetchKeyboards } = useKeyboards(appliedFilters);
+
+  // 전체 키 개수 범위를 저장 (필터링 전 전체 목록)
+  const [allKeyRanges, setAllKeyRanges] = useState<string[]>([]);
+
+  // 초기 로드 시 또는 새로운 키 개수가 추가되었을 때 전체 키 개수 범위 업데이트
+  useEffect(() => {
+    const ranges = keyboards.map(kb => kb.key_count_range).filter(Boolean);
+    const uniqueRanges = Array.from(new Set(ranges)).sort();
+
+    // 새로운 키 개수가 있으면 추가
+    setAllKeyRanges(prev => {
+      const combined = Array.from(new Set([...prev, ...uniqueRanges]));
+      return combined.sort();
+    });
+  }, [keyboards]);
+
+  // appliedFilters가 변경될 때 자동으로 fetchKeyboards 호출
+  useEffect(() => {
+    fetchKeyboards();
+  }, [appliedFilters]);
+
+  // 필터 반영 (필터 패널의 "반영" 버튼)
+  const handleApplyFilters = () => {
+    setAppliedFilters({ ...localFilters });
+  };
+
+  // 검색 실행 (검색 버튼)
+  const handleSearch = () => {
+    // 검색어와 정렬만 즉시 적용
+    setAppliedFilters(prev => ({
+      ...prev,
+      searchQuery: localFilters.searchQuery,
+      sortBy: localFilters.sortBy
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
@@ -32,12 +73,14 @@ const MainPage: React.FC = () => {
           {/* Filter Panel - Left Sidebar */}
           <aside className="lg:col-span-1">
             <FilterPanel
-              filters={filters}
-              onPriceRangeChange={(range) => updateFilter('priceRange', range)}
-              onPriceFilterChange={(value) => updateFilter('priceFilter', value)}
-              onKeyRangeToggle={toggleKeyRange}
-              onBooleanFilterChange={(key, value) => updateFilter(key, value)}
-              onReset={resetFilters}
+              filters={localFilters}
+              availableKeyRanges={allKeyRanges}
+              onPriceRangeChange={(range) => updateLocalFilter('priceRange', range)}
+              onPriceFilterChange={(value) => updateLocalFilter('priceFilter', value)}
+              onKeyRangeToggle={toggleLocalKeyRange}
+              onBooleanFilterChange={(key, value) => updateLocalFilter(key, value)}
+              onReset={resetLocalFilters}
+              onApply={handleApplyFilters}
             />
           </aside>
 
@@ -48,11 +91,11 @@ const MainPage: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div className="flex-1 w-full sm:w-auto flex gap-2">
                   <SearchBar
-                    value={filters.searchQuery}
-                    onChange={(value) => updateFilter('searchQuery', value)}
+                    value={localFilters.searchQuery}
+                    onChange={(value) => updateLocalFilter('searchQuery', value)}
                   />
                   <button
-                    onClick={fetchKeyboards}
+                    onClick={handleSearch}
                     className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
                   >
                     검색
@@ -63,8 +106,8 @@ const MainPage: React.FC = () => {
                     총 <span className="font-semibold">{total}</span>개
                   </span>
                   <SortSelector
-                    value={filters.sortBy}
-                    onChange={(value) => updateFilter('sortBy', value)}
+                    value={localFilters.sortBy}
+                    onChange={(value) => updateLocalFilter('sortBy', value)}
                   />
                 </div>
               </div>

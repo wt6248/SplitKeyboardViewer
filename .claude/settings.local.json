@@ -16,7 +16,8 @@
       "Bash(npm uninstall:*)",
       "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0YWRtaW4iLCJleHAiOjE3NjQ5Nzg2Mzl9.Z-K_wad1LRCwd6sdES0z7_RWonGghjwIJ7Ix6mxa7eE\")",
       "Bash(node test_phase4.js:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

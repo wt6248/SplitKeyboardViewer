@@ -7,19 +7,11 @@ interface KeyboardFormProps {
   onCancel: () => void;
 }
 
-const KEY_RANGES: { value: KeyRange; label: string }[] = [
-  { value: 'full', label: '풀사이즈' },
-  { value: 'tkl', label: 'TKL' },
-  { value: 'compact', label: '컴팩트' },
-  { value: '40', label: '40%' },
-  { value: '30', label: '30%' },
-];
-
 const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCancel }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [link, setLink] = useState('');
-  const [keyCountRange, setKeyCountRange] = useState<KeyRange>('compact');
+  const [keyCountRange, setKeyCountRange] = useState<KeyRange>('');
   const [isWireless, setIsWireless] = useState(false);
   const [hasOrtholinear, setHasOrtholinear] = useState(false);
   const [hasTenting, setHasTenting] = useState(false);
@@ -151,18 +143,14 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
         <label className="block text-sm font-medium text-gray-700">
           키 개수 범위 *
         </label>
-        <select
+        <input
+          type="text"
           value={keyCountRange}
-          onChange={(e) => setKeyCountRange(e.target.value as KeyRange)}
+          onChange={(e) => setKeyCountRange(e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          placeholder="예: 42, 36, 60 등"
           required
-        >
-          {KEY_RANGES.map((range) => (
-            <option key={range.value} value={range.value}>
-              {range.label}
-            </option>
-          ))}
-        </select>
+        />
       </div>
 
       {/* 이미지 */}

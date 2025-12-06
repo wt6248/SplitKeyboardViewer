@@ -3,39 +3,44 @@ import type { FilterState, KeyRange, PriceFilter } from '../../types/keyboard';
 
 interface FilterPanelProps {
   filters: FilterState;
+  availableKeyRanges: string[]; // 실제 데이터에서 추출한 키 개수 범위
   onPriceRangeChange: (range: [number, number]) => void;
   onPriceFilterChange: (value: PriceFilter) => void;
   onKeyRangeToggle: (range: KeyRange) => void;
   onBooleanFilterChange: (key: keyof FilterState, value: boolean | null) => void;
   onReset: () => void;
+  onApply: () => void; // 필터 반영 버튼
 }
 
 const FilterPanel: React.FC<FilterPanelProps> = ({
   filters,
+  availableKeyRanges,
   onPriceRangeChange,
   onPriceFilterChange,
   onKeyRangeToggle,
   onBooleanFilterChange,
   onReset,
+  onApply,
 }) => {
-  const keyRanges: { value: KeyRange; label: string }[] = [
-    { value: 'full', label: '풀사이즈' },
-    { value: 'tkl', label: 'TKL' },
-    { value: 'compact', label: '컴팩트' },
-    { value: '40', label: '40%' },
-    { value: '30', label: '30%' },
-  ];
 
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">필터</h3>
-        <button
-          onClick={onReset}
-          className="text-sm text-blue-600 hover:text-blue-800"
-        >
-          초기화
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={onReset}
+            className="text-sm text-gray-600 hover:text-gray-800"
+          >
+            초기화
+          </button>
+          <button
+            onClick={onApply}
+            className="px-4 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          >
+            반영
+          </button>
+        </div>
       </div>
 
       {/* Price Filter */}
@@ -102,24 +107,26 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       </div>
 
       {/* Key Ranges */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          키 개수
-        </label>
-        <div className="space-y-2">
-          {keyRanges.map(({ value, label }) => (
-            <label key={value} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.keyRanges.includes(value)}
-                onChange={() => onKeyRangeToggle(value)}
-                className="mr-2"
-              />
-              <span className="text-sm text-gray-700">{label}</span>
-            </label>
-          ))}
+      {availableKeyRanges.length > 0 && (
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            키 개수
+          </label>
+          <div className="space-y-2">
+            {availableKeyRanges.map((keyRange) => (
+              <label key={keyRange} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={filters.keyRanges.includes(keyRange)}
+                  onChange={() => onKeyRangeToggle(keyRange)}
+                  className="mr-2"
+                />
+                <span className="text-sm text-gray-700">{keyRange}키</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Boolean Filters */}
       <div className="space-y-4">
