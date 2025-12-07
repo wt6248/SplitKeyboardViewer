@@ -14,6 +14,7 @@ export const getKeyboards = async (params?: {
   max_price?: number;
   include_null_price?: boolean;
   key_ranges?: string;
+  keyboard_type?: string;
   is_wireless?: boolean;
   has_ortholinear?: boolean;
   has_tenting?: boolean;

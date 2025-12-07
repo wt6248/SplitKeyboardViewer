@@ -19,7 +19,8 @@
       "Bash(npm run build:*)",
       "Bash(npx tsc:*)",
       "Bash(node test_keyboard_type_filter.js:*)",
-      "Bash(node test_dactyl_type.js:*)"
+      "Bash(node test_dactyl_type.js:*)",
+      "Bash(node test_admin_filters.js)"
     ],
     "deny": [],
     "ask": []
