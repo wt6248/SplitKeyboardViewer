@@ -42,11 +42,21 @@ const KeyboardManagePage: React.FC = () => {
         params.key_ranges = filterKeyRange;
       }
 
+      console.log('Fetching keyboards with params:', params);
+
       const response = await getKeyboards(params);
+
+      console.log('Response:', {
+        total: response.total,
+        count: response.keyboards.length,
+        keyboards: response.keyboards.map(kb => ({ id: kb.id, name: kb.name, key_count_range: kb.key_count_range }))
+      });
+
       setKeyboards(response.keyboards);
       setTotal(response.total);
       setTotalPages(response.total_pages);
     } catch (err: any) {
+      console.error('Error fetching keyboards:', err);
       setError(err.message || '키보드 목록을 불러오는데 실패했습니다');
     } finally {
       setLoading(false);
@@ -186,10 +196,13 @@ const KeyboardManagePage: React.FC = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">전체</option>
-              <option value="compact">30-40키</option>
-              <option value="split">40-60키</option>
-              <option value="tkl">60-80키</option>
-              <option value="full">80키 이상</option>
+              <option value="3*5">3*5</option>
+              <option value="3*6">3*6</option>
+              <option value="4*5">4*5</option>
+              <option value="4*6">4*6</option>
+              <option value="4*7">4*7</option>
+              <option value="5*6">5*6</option>
+              <option value="5*7">5*7</option>
             </select>
           </div>
         </div>

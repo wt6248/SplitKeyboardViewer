@@ -105,7 +105,7 @@ async function testKeyboardTypeFilter() {
 async function testKeyRangeFilter() {
   console.log('\n=== Test 4: 키 개수 필터 ===');
 
-  const ranges = ['compact', 'split', 'tkl', 'full'];
+  const ranges = ['3*5', '3*6', '4*5', '4*6', '5*6', '40', '42', 'tkl'];
 
   for (const range of ranges) {
     const response = await fetch(`${BASE_URL}/api/keyboards?key_ranges=${range}`);
@@ -133,7 +133,7 @@ async function testKeyRangeFilter() {
 async function testCombinedFilters() {
   console.log('\n=== Test 5: 복합 필터 ===');
 
-  const response = await fetch(`${BASE_URL}/api/keyboards?keyboard_type=ortholinear&key_ranges=split&search=`);
+  const response = await fetch(`${BASE_URL}/api/keyboards?keyboard_type=ortholinear&key_ranges=5*6&search=`);
 
   if (!response.ok) {
     throw new Error(`Failed to apply combined filters: ${response.status}`);
@@ -141,15 +141,15 @@ async function testCombinedFilters() {
 
   const data = await response.json();
 
-  console.log(`✓ ortholinear + split: ${data.keyboards.length}개`);
+  console.log(`✓ ortholinear + 5*6: ${data.keyboards.length}개`);
 
   // 결과 검증
   data.keyboards.forEach(kb => {
     if (kb.keyboard_type !== 'ortholinear') {
       throw new Error(`Expected keyboard_type=ortholinear, got ${kb.keyboard_type}`);
     }
-    if (kb.key_count_range !== 'split') {
-      throw new Error(`Expected key_count_range=split, got ${kb.key_count_range}`);
+    if (kb.key_count_range !== '5*6') {
+      throw new Error(`Expected key_count_range=5*6, got ${kb.key_count_range}`);
     }
     console.log(`  - ${kb.name} (${kb.keyboard_type}, ${kb.key_count_range})`);
   });
