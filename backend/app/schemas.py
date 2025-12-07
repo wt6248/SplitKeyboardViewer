@@ -13,6 +13,16 @@ class KeyRange(str, Enum):
     thirty = "30"
 
 
+class KeyboardType(str, Enum):
+    """키보드 종류"""
+    typewriter = "typewriter"  # 타자기
+    alice = "alice"  # 앨리스
+    ortholinear = "ortholinear"  # 오소리니어
+    column_stagger = "column_stagger"  # 칼럼스태거
+    splay = "splay"  # 스플레이
+    none = "none"  # 없음
+
+
 class SortOption(str, Enum):
     name_asc = "name_asc"
     name_desc = "name_desc"
@@ -22,13 +32,9 @@ class SortOption(str, Enum):
 
 # Keyboard Schemas
 class KeyboardTags(BaseModel):
+    """키보드 태그 (무선, 커서조작만 남김)"""
     is_wireless: bool = False
-    has_ortholinear: bool = False
-    has_tenting: bool = False
     has_cursor_control: bool = False
-    has_display: bool = False
-    has_column_stagger: bool = False
-    has_splay: bool = False
 
 
 class KeyboardBase(BaseModel):
@@ -36,13 +42,9 @@ class KeyboardBase(BaseModel):
     price: Optional[int] = None
     link: str
     key_count_range: KeyRange
+    keyboard_type: KeyboardType = KeyboardType.none
     is_wireless: bool = False
-    has_ortholinear: bool = False
-    has_tenting: bool = False
     has_cursor_control: bool = False
-    has_display: bool = False
-    has_column_stagger: bool = False
-    has_splay: bool = False
 
 
 class KeyboardCreate(KeyboardBase):
@@ -60,6 +62,7 @@ class KeyboardResponse(BaseModel):
     link: str
     image_url: str
     key_count_range: str
+    keyboard_type: KeyboardType
     tags: KeyboardTags
     created_at: datetime
     updated_at: datetime

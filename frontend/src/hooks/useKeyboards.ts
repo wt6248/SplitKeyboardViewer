@@ -47,27 +47,17 @@ export const useKeyboards = (filters: FilterState) => {
         params.key_ranges = filters.keyRanges.join(',');
       }
 
-      // Boolean filters
+      // Keyboard type filter
+      if (filters.keyboardType !== null) {
+        params.keyboard_type = filters.keyboardType;
+      }
+
+      // Tag filters (무선, 커서조작만)
       if (filters.isWireless !== null) {
         params.is_wireless = filters.isWireless;
       }
-      if (filters.hasOrtholinear !== null) {
-        params.has_ortholinear = filters.hasOrtholinear;
-      }
-      if (filters.hasTenting !== null) {
-        params.has_tenting = filters.hasTenting;
-      }
       if (filters.hasCursorControl !== null) {
         params.has_cursor_control = filters.hasCursorControl;
-      }
-      if (filters.hasDisplay !== null) {
-        params.has_display = filters.hasDisplay;
-      }
-      if (filters.hasColumnStagger !== null) {
-        params.has_column_stagger = filters.hasColumnStagger;
-      }
-      if (filters.hasSplay !== null) {
-        params.has_splay = filters.hasSplay;
       }
 
       // Search query

@@ -7,6 +7,7 @@ import SearchBar from '../components/keyboard/SearchBar';
 import SortSelector from '../components/keyboard/SortSelector';
 import ComparisonBar from '../components/comparison/ComparisonBar';
 import ComparisonModal from '../components/comparison/ComparisonModal';
+import Pagination from '../components/common/Pagination';
 import type { FilterState } from '../types/keyboard';
 
 const MainPage: React.FC = () => {
@@ -16,7 +17,7 @@ const MainPage: React.FC = () => {
   // 실제 적용된 필터 상태 (API 호출에 사용)
   const [appliedFilters, setAppliedFilters] = useState<FilterState>(localFilters);
 
-  const { keyboards, loading, error, total, fetchKeyboards } = useKeyboards(appliedFilters);
+  const { keyboards, loading, error, total, page, totalPages, setPage, fetchKeyboards } = useKeyboards(appliedFilters);
 
   // 전체 키 개수 범위를 저장 (필터링 전 전체 목록)
   const [allKeyRanges, setAllKeyRanges] = useState<string[]>([]);
@@ -60,7 +61,7 @@ const MainPage: React.FC = () => {
       <header className="bg-white shadow sticky top-0 z-40">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            스플릿 키보드 비교
+            스플릿 키보드 모아보기
           </h1>
           <p className="mt-2 text-sm text-gray-600">
             원하는 스플릿 키보드를 찾아보세요
@@ -73,16 +74,19 @@ const MainPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filter Panel - Left Sidebar */}
           <aside className="lg:col-span-1">
-            <FilterPanel
-              filters={localFilters}
-              availableKeyRanges={allKeyRanges}
-              onPriceRangeChange={(range) => updateLocalFilter('priceRange', range)}
-              onPriceFilterChange={(value) => updateLocalFilter('priceFilter', value)}
-              onKeyRangeToggle={toggleLocalKeyRange}
-              onBooleanFilterChange={(key, value) => updateLocalFilter(key, value)}
-              onReset={resetLocalFilters}
-              onApply={handleApplyFilters}
-            />
+            <div className="sticky top-24 self-start">
+              <FilterPanel
+                filters={localFilters}
+                availableKeyRanges={allKeyRanges}
+                onPriceRangeChange={(range) => updateLocalFilter('priceRange', range)}
+                onPriceFilterChange={(value) => updateLocalFilter('priceFilter', value)}
+                onKeyRangeToggle={toggleLocalKeyRange}
+                onBooleanFilterChange={(key, value) => updateLocalFilter(key, value)}
+                onKeyboardTypeChange={(value) => updateLocalFilter('keyboardType', value)}
+                onReset={resetLocalFilters}
+                onApply={handleApplyFilters}
+              />
+            </div>
           </aside>
 
           {/* Main Content - Keyboards Grid */}
@@ -116,6 +120,16 @@ const MainPage: React.FC = () => {
 
             {/* Keyboards Grid */}
             <KeyboardGrid keyboards={keyboards} loading={loading} error={error} />
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={(newPage) => {
+                setPage(newPage);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
           </div>
         </div>
       </main>

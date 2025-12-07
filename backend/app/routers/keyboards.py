@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, func
 from typing import Optional, List
 import math
 
@@ -12,6 +12,7 @@ from ..schemas import (
     KeyboardCompareRequest,
     KeyboardCompareResponse,
     KeyboardTags,
+    KeyboardType,
     SortOption
 )
 
@@ -27,14 +28,10 @@ def keyboard_to_response(keyboard: Keyboard, base_url: str = "") -> KeyboardResp
         link=keyboard.link,
         image_url=f"/uploads/{keyboard.image_path}",
         key_count_range=keyboard.key_count_range,
+        keyboard_type=keyboard.keyboard_type,
         tags=KeyboardTags(
             is_wireless=keyboard.is_wireless,
-            has_ortholinear=keyboard.has_ortholinear,
-            has_tenting=keyboard.has_tenting,
-            has_cursor_control=keyboard.has_cursor_control,
-            has_display=keyboard.has_display,
-            has_column_stagger=keyboard.has_column_stagger,
-            has_splay=keyboard.has_splay
+            has_cursor_control=keyboard.has_cursor_control
         ),
         created_at=keyboard.created_at,
         updated_at=keyboard.updated_at
@@ -48,13 +45,9 @@ def get_keyboards(
     include_null_price: bool = Query(True, description="Include keyboards with no price"),
     only_null_price: bool = Query(False, description="Only show keyboards with no price (DIY only)"),
     key_ranges: Optional[str] = Query(None, description="Comma-separated key ranges (e.g., 'tkl,compact')"),
+    keyboard_type: Optional[KeyboardType] = Query(None, description="Filter by keyboard type"),
     is_wireless: Optional[bool] = Query(None, description="Filter by wireless"),
-    has_ortholinear: Optional[bool] = Query(None, description="Filter by ortholinear"),
-    has_tenting: Optional[bool] = Query(None, description="Filter by tenting"),
     has_cursor_control: Optional[bool] = Query(None, description="Filter by cursor control"),
-    has_display: Optional[bool] = Query(None, description="Filter by display"),
-    has_column_stagger: Optional[bool] = Query(None, description="Filter by column stagger"),
-    has_splay: Optional[bool] = Query(None, description="Filter by splay"),
     search: Optional[str] = Query(None, description="Search by name"),
     sort_by: SortOption = Query(SortOption.name_asc, description="Sort option"),
     page: int = Query(1, ge=1, description="Page number"),
@@ -94,21 +87,15 @@ def get_keyboards(
         ranges = [r.strip() for r in key_ranges.split(",")]
         query = query.filter(Keyboard.key_count_range.in_(ranges))
 
-    # Boolean filters
+    # Keyboard type filter
+    if keyboard_type is not None:
+        query = query.filter(Keyboard.keyboard_type == keyboard_type)
+
+    # Tag filters (무선, 커서조작만 남김)
     if is_wireless is not None:
         query = query.filter(Keyboard.is_wireless == is_wireless)
-    if has_ortholinear is not None:
-        query = query.filter(Keyboard.has_ortholinear == has_ortholinear)
-    if has_tenting is not None:
-        query = query.filter(Keyboard.has_tenting == has_tenting)
     if has_cursor_control is not None:
         query = query.filter(Keyboard.has_cursor_control == has_cursor_control)
-    if has_display is not None:
-        query = query.filter(Keyboard.has_display == has_display)
-    if has_column_stagger is not None:
-        query = query.filter(Keyboard.has_column_stagger == has_column_stagger)
-    if has_splay is not None:
-        query = query.filter(Keyboard.has_splay == has_splay)
 
     # Search filter
     if search:
@@ -117,11 +104,11 @@ def get_keyboards(
     # Get total count before pagination
     total = query.count()
 
-    # Sorting
+    # Sorting (case-insensitive for name sorting)
     if sort_by == SortOption.name_asc:
-        query = query.order_by(Keyboard.name.asc())
+        query = query.order_by(func.lower(Keyboard.name).asc())
     elif sort_by == SortOption.name_desc:
-        query = query.order_by(Keyboard.name.desc())
+        query = query.order_by(func.lower(Keyboard.name).desc())
     elif sort_by == SortOption.price_asc:
         # NULL prices last
         query = query.order_by(Keyboard.price.asc().nullslast())

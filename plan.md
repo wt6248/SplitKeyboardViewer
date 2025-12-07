@@ -1,167 +1,239 @@
-# Phase 5: 배포 및 최적화 작업 계획
+# Phase 6: 기능 개선 및 UX 향상 작업 계획
 
 ## 목표
-로컬 개발 환경에서 테스트 가능한 배포 준비 및 성능 최적화 작업 수행
+fixlist.md의 개선 사항을 구현하여 사용자 경험 향상 및 기능 확장
 
-## 작업 항목
+---
 
-### 1. 프론트엔드 프로덕션 빌드 설정 ⏳
-- [x] Vite 프로덕션 빌드 설정 확인
-- [ ] 환경 변수 설정 (.env.production)
-- [ ] 빌드 최적화 옵션 설정
-- [ ] 번들 사이즈 분석
+## Phase 5 완료 요약 ✅
 
-### 2. Google Analytics 연동 ⏳
-- [ ] GA4 추적 코드 통합
-- [ ] 주요 이벤트 추적 설정
-  - 필터 사용
-  - 비교 기능 사용
-  - 검색 쿼리
-  - 외부 링크 클릭
-- [ ] 커스텀 훅으로 GA 추적 기능 구현
+Phase 5 (배포 및 최적화)는 2025-12-05에 완료되었습니다:
+- 프론트엔드 프로덕션 빌드 설정 완료
+- Google Analytics 연동 완료
+- 이미지 최적화 및 Lazy Loading 구현
+- Nginx 설정 완료
+- 배포 스크립트 작성 완료
+- 프로덕션 환경 API 경로 문제 해결 (2025-12-06)
 
-### 3. 이미지 최적화 ⏳
-- [ ] Lazy loading 구현
-- [ ] WebP 포맷 지원
-- [ ] 이미지 압축 유틸리티
-- [ ] Placeholder 이미지
+---
 
-### 4. 성능 최적화 ⏳
-- [ ] React.memo 적용
-- [ ] useMemo, useCallback 최적화
-- [ ] 코드 스플리팅 (React.lazy)
-- [ ] API 응답 캐싱
+## Phase 6 작업 계획
 
-### 5. Nginx 설정 ⏳
-- [ ] 프론트엔드 정적 파일 서빙 설정
-- [ ] API 프록시 설정
-- [ ] CORS 설정
-- [ ] Gzip 압축 설정
-- [ ] 캐싱 헤더 설정
+## 작업 항목 (fixlist.md 기반)
 
-### 6. 배포 스크립트 ⏳
-- [ ] 백엔드 배포 스크립트
-- [ ] 프론트엔드 빌드 및 배포 스크립트
-- [ ] 데이터베이스 마이그레이션 스크립트
-- [ ] 환경 설정 가이드
+### 우선순위 1: 긴급 수정 사항 ✅ 완료
 
-### 7. 테스트 ⏳
-- [ ] 프로덕션 빌드 테스트
-- [ ] 성능 테스트 (Lighthouse)
-- [ ] 통합 테스트
-- [ ] 브라우저 호환성 테스트
+#### 1-1. 홈페이지 제목 변경 ✅
+**상태**: 완료 (2025-12-07)
+- [x] MainPage 제목 확인
+- [x] index.html의 title을 "스플릿 키보드 모아보기"로 변경
+- [x] MainPage.tsx의 h1 텍스트를 "스플릿 키보드 모아보기"로 변경
+
+**파일**:
+- `frontend/index.html:7`
+- `frontend/src/pages/MainPage.tsx:62-64`
+
+#### 1-2. 대소문자 구분 없는 이름 정렬 ✅
+**상태**: 완료 (2025-12-07)
+- [x] SQLAlchemy collate 사용하여 대소문자 구분 없이 정렬
+- [x] keyboards.py에서 `func.lower(Keyboard.name)` 사용
+
+**파일**:
+- `backend/app/routers/keyboards.py`
+
+**적용된 코드**:
+```python
+from sqlalchemy import func
+# name_asc
+query = query.order_by(func.lower(Keyboard.name).asc())
+# name_desc
+query = query.order_by(func.lower(Keyboard.name).desc())
+```
+
+### 우선순위 2: UI/UX 개선 ✅ 완료
+
+#### 2-1. 페이지네이션 UI 추가 ✅
+**상태**: 완료 (2025-12-07)
+- [x] API 레벨 페이지네이션 구현 완료
+- [x] useKeyboards 훅에 page 상태 관리 완료
+- [x] 페이지네이션 컴포넌트 생성 (`frontend/src/components/common/Pagination.tsx`)
+- [x] MainPage에 페이지 버튼 UI 추가
+- [x] 페이지 이동 시 스크롤 상단으로 이동
+
+**구현된 기능**:
+- ✅ 1, 2, 3, ... 페이지 번호 버튼 (ellipsis 지원)
+- ✅ 이전/다음 버튼
+- ✅ 현재 페이지 하이라이트
+- ✅ 총 페이지 수 표시
+
+#### 2-2. 스크롤 시 필터 패널 고정 ✅
+**상태**: 완료 (2025-12-07)
+- [x] 헤더 sticky 처리 완료
+- [x] FilterPanel을 sticky로 변경
+- [x] 적절한 z-index 및 top 위치 설정
+- [x] 모바일 반응형 고려
+
+**파일**:
+- `frontend/src/pages/MainPage.tsx:77`
+
+**적용된 코드**:
+```tsx
+<div className="sticky top-24 self-start">
+  <FilterPanel ... />
+</div>
+```
+
+### 우선순위 3: 데이터 모델 재구조화 (Breaking Change) ✅ 완료
+
+#### 3-1. 키보드 종류 필드 추가 및 태그 재구조화 ✅
+**상태**: 완료 (2025-12-07)
+
+**단계별 작업**:
+
+**Step 1: 백엔드 모델 변경** ✅
+- [x] models.py에 `keyboard_type` Enum 필드 추가
+  - 값: `typewriter`, `alice`, `ortholinear`, `column_stagger`, `splay`, `none`
+- [x] has_ortholinear, has_column_stagger, has_splay 필드 deprecated
+- [x] has_tenting, has_display 필드 deprecated (무선, 커서조작만 남김)
+
+**Step 2: 스키마 및 API 변경** ✅
+- [x] schemas.py에 KeyboardType enum 추가
+- [x] KeyboardBase, KeyboardCreate에 keyboard_type 필드 추가
+- [x] keyboards.py API에 keyboard_type 필터 추가
+- [x] 태그 필터를 is_wireless, has_cursor_control만 남김
+
+**Step 3: 데이터 마이그레이션 스크립트** ✅
+- [x] 기존 데이터의 태그 값을 keyboard_type으로 변환
+- [x] has_ortholinear=True → keyboard_type='ortholinear'
+- [x] has_column_stagger=True → keyboard_type='column_stagger'
+- [x] has_splay=True → keyboard_type='splay'
+- [x] 로컬 환경 11개 키보드 마이그레이션 완료
+
+**Step 4: 프론트엔드 변경** ✅
+- [x] types/keyboard.ts에 KeyboardType 타입 추가
+- [x] FilterPanel에 키보드 종류 드롭다운 추가 (327줄 → 213줄 단순화)
+- [x] 오소리니어, 칼럼스태거, 스플레이 태그 필터 제거
+- [x] 틸팅, 디스플레이 태그 필터 제거
+- [x] KeyboardCard에서 keyboard_type 표시
+- [x] useKeyboards hook 업데이트
+
+**테스트** ✅
+- [x] Frontend 빌드 성공
+- [x] 통합 테스트 통과 (keyboard_type 필터, 태그 구조 검증)
+
+**변경된 파일**:
+- `backend/app/models.py`
+- `backend/app/schemas.py`
+- `backend/app/routers/keyboards.py`
+- `backend/app/routers/admin.py`
+- `backend/migrate_keyboard_type.py` (신규)
+- `frontend/src/types/keyboard.ts`
+- `frontend/src/hooks/useFilters.ts`
+- `frontend/src/hooks/useKeyboards.ts`
+- `frontend/src/components/keyboard/FilterPanel.tsx`
+- `frontend/src/components/keyboard/KeyboardCard.tsx`
+- `frontend/src/pages/MainPage.tsx`
+
+### 우선순위 4: 권한 관리 시스템
+
+#### 4-1. 계정 권한 등급 추가 ⏳
+**상태**: 미구현 (DB 스키마 및 인증 로직 변경)
+
+**단계별 작업**:
+
+**Step 1: 백엔드 모델 변경**
+- [ ] models.py Admin 모델에 `role` Enum 필드 추가
+  - 값: `admin` (모든 권한), `editor` (키보드 추가만)
+- [ ] 기본값: `editor`
+
+**Step 2: 인증 및 권한 체크**
+- [ ] auth.py에 역할 기반 권한 체크 함수 추가
+  - `require_admin()` - admin 역할만 허용
+  - `require_editor_or_admin()` - editor, admin 모두 허용
+- [ ] admin.py에서 엔드포인트별 권한 체크 적용
+  - POST /keyboards: editor 이상
+  - PUT /keyboards: editor 이상
+  - DELETE /keyboards: admin만
+  - 계정 관리: admin만
+
+**Step 3: 프론트엔드 변경**
+- [ ] AuthContext에 role 정보 추가
+- [ ] 관리자 페이지에서 role에 따라 UI 조건부 표시
+- [ ] 계정 생성 시 role 선택 가능
+
+**파일**:
+- `backend/app/models.py`
+- `backend/app/schemas.py`
+- `backend/app/auth.py`
+- `backend/app/routers/admin.py`
+- `frontend/src/context/AuthContext.tsx`
+- `frontend/src/pages/admin/`
 
 ## 작업 진행 상황
 
-### 2025-12-05
+### 2025-12-07
 
-#### 초기 설정
-- Phase 4 구현 완료 확인
-- Phase 5 작업 계획 수립
-- plan.md 생성
+#### Phase 6 작업 완료 ✅
+**fixlist.md 9개 항목 중 8개 구현 완료 (89%)**
 
-#### 1. 프론트엔드 프로덕션 빌드 설정 ✅
-- Vite 프로덕션 빌드 설정 완료
-- 환경 변수 설정 (.env.production)
-- 빌드 최적화 옵션 설정 (esbuild minify, 청크 분할)
-- 개발 서버 프록시 설정
-- 빌드 성공 확인
-  - index.html: 0.54 kB (gzip: 0.32 kB)
-  - CSS: 17.92 kB (gzip: 4.00 kB)
-  - react-vendor.js: 44.53 kB (gzip: 15.98 kB)
-  - main bundle: 250.25 kB (gzip: 79.22 kB)
+**완료된 작업**:
+1. ✅ **긴급 수정**
+   - 홈페이지 제목 변경 (index.html, MainPage.tsx)
+   - 대소문자 구분 없는 정렬 (func.lower() 사용)
 
-#### 2. Google Analytics 연동 ✅
-- GA4 추적 유틸리티 구현 (`src/utils/analytics.ts`)
-- 이벤트 추적 함수:
-  - 페이지뷰 추적
-  - 검색 이벤트
-  - 필터 사용 이벤트
-  - 비교 기능 이벤트
-  - 외부 링크 클릭 이벤트
-  - 정렬 변경 이벤트
-- 커스텀 훅 구현 (`src/hooks/useAnalytics.ts`)
+2. ✅ **UI/UX 개선**
+   - 페이지네이션 UI 추가 (Pagination 컴포넌트)
+   - Sticky 필터 패널 구현
 
-#### 3. 이미지 최적화 및 Lazy Loading ✅
-- LazyImage 컴포넌트 구현
-- Intersection Observer 기반 lazy loading
-- 이미지 로딩 상태 표시 (blur 효과)
-- Placeholder 이미지 지원
-- 50px 전 사전 로딩 최적화
+3. ✅ **데이터 모델 재구조화 (Breaking Change)**
+   - 백엔드: KeyboardType enum, keyboard_type 필드 추가
+   - 백엔드: 태그 단순화 (무선, 커서조작만)
+   - 백엔드: API 엔드포인트 업데이트
+   - 프론트엔드: 전체 컴포넌트 업데이트
+   - 데이터 마이그레이션: 로컬 환경 완료 (11개 키보드)
+   - 테스트: 빌드 성공, 통합 테스트 통과
 
-#### 4. Nginx 설정 ✅
-- 프로덕션 Nginx 설정 파일 작성
-- Gzip 압축 설정
-- 정적 파일 캐싱 (1년)
-- API 프록시 설정
-- Rate Limiting (10 req/s)
-- SSL/TLS 설정 템플릿
-- 보안 헤더 설정
+**남은 작업**:
+4. ⏳ **권한 시스템** (선택사항) - Admin role 필드 추가
 
-#### 5. 배포 스크립트 ✅
-- 서버 초기 설정 스크립트 (`deployment/setup-server.sh`)
-  - 시스템 패키지 설치
-  - Python, Node.js 설치
-  - 프로젝트 클론
-  - 백엔드 가상환경 설정
-  - Systemd 서비스 등록
-  - Nginx 설정
-- 배포 자동화 스크립트 (`deployment/deploy.sh`)
-  - Git pull
-  - 의존성 설치
-  - 프론트엔드 빌드
-  - 서비스 재시작
-- 배포 가이드 문서 (`deployment/DEPLOYMENT.md`)
-  - 사전 요구사항
-  - 단계별 배포 가이드
-  - SSL 인증서 설정
-  - 서비스 관리 방법
-  - 백업 설정
-  - 트러블슈팅
+### 2025-12-06
 
-#### 6. 테스트 구성 ✅
-- Phase 5 통합 테스트 스크립트 작성 (`test_phase5.js`)
-- 환경 변수 기반 테스트 설정 (`.env.test`)
-- 테스트 항목:
-  1. 백엔드 서버 상태 확인
-  2. 관리자 로그인
-  3. 키보드 CRUD (생성/조회/수정/삭제)
-  4. 계정 관리 (조회/생성/삭제)
-  5. 프론트엔드 빌드 확인
-- 상세한 로그 출력 및 색상 구분
+#### 프로덕션 환경 API 경로 문제 해결 ✅
+- VITE_API_BASE_URL을 빈 문자열로 설정하여 /api/api 중복 문제 해결
+- 방어적 코딩 추가 (optional chaining)
+- 프론트엔드 빌드 완료
+- 상세 내용: status.md 참조
 
-#### 테스트 실행 방법
-```bash
-# 1. .env.test 파일에 관리자 계정 정보 입력
-# ADMIN_USERNAME=your_admin
-# ADMIN_PASSWORD=your_password
+### 2025-12-05 (Phase 5 완료)
 
-# 2. 백엔드 서버 실행 (별도 터미널)
-cd backend
-python run.py
-
-# 3. 테스트 실행
-node test_phase5.js
-```
+#### 배포 및 최적화 작업 완료 ✅
+- 프론트엔드 프로덕션 빌드 설정
+- Google Analytics 연동
+- 이미지 Lazy Loading
+- Nginx 설정 및 배포 스크립트
+- 통합 테스트 구성
 
 ## 참고사항
 
-### 배포 환경 (Oracle Cloud)
-- 실제 Oracle Cloud 배포는 서버 환경이 필요
-- 로컬에서는 설정 파일과 스크립트만 준비
-- Nginx 설정은 로컬 테스트 가능 (Docker 사용)
+### fixlist.md 구현 우선순위 권장사항
 
-### 성능 목표
-- Lighthouse Score: 90+ (Performance)
-- First Contentful Paint: < 1.5s
-- Time to Interactive: < 3.5s
-- Bundle Size: < 500KB (gzipped)
+**즉시 구현 가능 (1-2일)**:
+1. 홈페이지 제목 변경
+2. 대소문자 구분 없는 정렬
+3. 페이지네이션 UI
 
-### 보안 고려사항
-- HTTPS 적용 (Let's Encrypt)
-- 환경 변수 보안 관리
-- API Rate Limiting
-- CORS 정책
+**단기 구현 (3-5일)**:
+4. 스크롤 시 필터 고정
+
+**중기 구현 (1-2주, Breaking Change)**:
+5. 키보드 종류 필드 추가 및 태그 재구조화
+   - 기존 데이터 마이그레이션 필요
+   - 프론트엔드 전체 테스트 필요
+
+**장기 구현 (2-3주)**:
+6. 계정 권한 시스템
+   - 인증 로직 재설계 필요
+   - 관리자 페이지 UI 변경 필요
 
 ---
 

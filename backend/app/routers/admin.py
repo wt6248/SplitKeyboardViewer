@@ -11,7 +11,8 @@ from ..schemas import (
     AdminListResponse,
     Token,
     KeyboardResponse,
-    KeyboardTags
+    KeyboardTags,
+    KeyboardType
 )
 from ..auth import create_access_token, get_current_admin
 from ..utils.security import verify_password, get_password_hash
@@ -45,14 +46,10 @@ async def create_keyboard(
     name: str = Form(...),
     link: str = Form(...),
     key_count_range: str = Form(...),
+    keyboard_type: KeyboardType = Form(KeyboardType.none),
     price: Optional[int] = Form(None),
     is_wireless: bool = Form(False),
-    has_ortholinear: bool = Form(False),
-    has_tenting: bool = Form(False),
     has_cursor_control: bool = Form(False),
-    has_display: bool = Form(False),
-    has_column_stagger: bool = Form(False),
-    has_splay: bool = Form(False),
     image: UploadFile = File(...),
     current_admin: Admin = Depends(get_current_admin),
     db: Session = Depends(get_db)
@@ -68,13 +65,9 @@ async def create_keyboard(
         link=link,
         image_path=image_filename,
         key_count_range=key_count_range,
+        keyboard_type=keyboard_type,
         is_wireless=is_wireless,
-        has_ortholinear=has_ortholinear,
-        has_tenting=has_tenting,
-        has_cursor_control=has_cursor_control,
-        has_display=has_display,
-        has_column_stagger=has_column_stagger,
-        has_splay=has_splay
+        has_cursor_control=has_cursor_control
     )
 
     db.add(keyboard)
@@ -88,14 +81,10 @@ async def create_keyboard(
         link=keyboard.link,
         image_url=f"/uploads/{keyboard.image_path}",
         key_count_range=keyboard.key_count_range,
+        keyboard_type=keyboard.keyboard_type,
         tags=KeyboardTags(
             is_wireless=keyboard.is_wireless,
-            has_ortholinear=keyboard.has_ortholinear,
-            has_tenting=keyboard.has_tenting,
-            has_cursor_control=keyboard.has_cursor_control,
-            has_display=keyboard.has_display,
-            has_column_stagger=keyboard.has_column_stagger,
-            has_splay=keyboard.has_splay
+            has_cursor_control=keyboard.has_cursor_control
         ),
         created_at=keyboard.created_at,
         updated_at=keyboard.updated_at
@@ -108,14 +97,10 @@ async def update_keyboard(
     name: str = Form(...),
     link: str = Form(...),
     key_count_range: str = Form(...),
+    keyboard_type: KeyboardType = Form(KeyboardType.none),
     price: Optional[int] = Form(None),
     is_wireless: bool = Form(False),
-    has_ortholinear: bool = Form(False),
-    has_tenting: bool = Form(False),
     has_cursor_control: bool = Form(False),
-    has_display: bool = Form(False),
-    has_column_stagger: bool = Form(False),
-    has_splay: bool = Form(False),
     image: Optional[UploadFile] = File(None),
     current_admin: Admin = Depends(get_current_admin),
     db: Session = Depends(get_db)
@@ -139,13 +124,9 @@ async def update_keyboard(
     keyboard.price = price
     keyboard.link = link
     keyboard.key_count_range = key_count_range
+    keyboard.keyboard_type = keyboard_type
     keyboard.is_wireless = is_wireless
-    keyboard.has_ortholinear = has_ortholinear
-    keyboard.has_tenting = has_tenting
     keyboard.has_cursor_control = has_cursor_control
-    keyboard.has_display = has_display
-    keyboard.has_column_stagger = has_column_stagger
-    keyboard.has_splay = has_splay
 
     db.commit()
     db.refresh(keyboard)
@@ -157,14 +138,10 @@ async def update_keyboard(
         link=keyboard.link,
         image_url=f"/uploads/{keyboard.image_path}",
         key_count_range=keyboard.key_count_range,
+        keyboard_type=keyboard.keyboard_type,
         tags=KeyboardTags(
             is_wireless=keyboard.is_wireless,
-            has_ortholinear=keyboard.has_ortholinear,
-            has_tenting=keyboard.has_tenting,
-            has_cursor_control=keyboard.has_cursor_control,
-            has_display=keyboard.has_display,
-            has_column_stagger=keyboard.has_column_stagger,
-            has_splay=keyboard.has_splay
+            has_cursor_control=keyboard.has_cursor_control
         ),
         created_at=keyboard.created_at,
         updated_at=keyboard.updated_at

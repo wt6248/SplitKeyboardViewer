@@ -60,39 +60,23 @@ const KeyboardCard: React.FC<KeyboardCardProps> = ({ keyboard }) => {
           <span className="text-xs bg-gray-100 px-2 py-1 rounded">
             {keyboard.key_count_range}키
           </span>
+          {keyboard.keyboard_type && keyboard.keyboard_type !== 'none' && (
+            <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+              {keyboard.keyboard_type === 'typewriter' && '일반'}
+              {keyboard.keyboard_type === 'alice' && '앨리스'}
+              {keyboard.keyboard_type === 'ortholinear' && '오소리니어'}
+              {keyboard.keyboard_type === 'column_stagger' && '칼럼스태거'}
+              {keyboard.keyboard_type === 'splay' && '스플레이'}
+            </span>
+          )}
           {keyboard.tags?.is_wireless && (
             <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
               무선
             </span>
           )}
-          {keyboard.tags?.has_ortholinear && (
-            <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-              오소리니어
-            </span>
-          )}
-          {keyboard.tags?.has_tenting && (
-            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-              틸팅
-            </span>
-          )}
           {keyboard.tags?.has_cursor_control && (
             <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
               커서조작
-            </span>
-          )}
-          {keyboard.tags?.has_display && (
-            <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded">
-              디스플레이
-            </span>
-          )}
-          {keyboard.tags?.has_column_stagger && (
-            <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
-              칼럼스태거
-            </span>
-          )}
-          {keyboard.tags?.has_splay && (
-            <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded">
-              스플레이
             </span>
           )}
         </div>
