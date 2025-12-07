@@ -40,6 +40,11 @@ const MainPage: React.FC = () => {
     fetchKeyboards();
   }, [appliedFilters]);
 
+  // page가 변경될 때 자동으로 fetchKeyboards 호출
+  useEffect(() => {
+    fetchKeyboards();
+  }, [page]);
+
   // 필터 반영 (필터 패널의 "반영" 버튼)
   const handleApplyFilters = () => {
     setAppliedFilters({ ...localFilters });

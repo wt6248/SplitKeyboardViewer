@@ -184,8 +184,8 @@ npm install
 npm run build
 
 # 빌드 파일 배포
-sudo rm -rf /var/www/frontend/*
-sudo cp -r dist/* /var/www/frontend/
+sudo rm -rf /var/www/split-keyboard/frontend/*
+sudo cp -r dist/* /var/www/split-keyboard/frontend/
 
 # 권한 설정
 sudo chown -R www-data:www-data /var/www/frontend
