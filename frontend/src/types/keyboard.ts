@@ -2,7 +2,7 @@
 export type KeyRange = string;
 
 // 키보드 종류
-export type KeyboardType = 'typewriter' | 'alice' | 'ortholinear' | 'column_stagger' | 'splay' | 'none';
+export type KeyboardType = 'typewriter' | 'alice' | 'ortholinear' | 'column_stagger' | 'splay' | 'dactyl' | 'none';
 
 // 정렬 옵션
 export type SortOption = 'name_asc' | 'name_desc' | 'price_asc' | 'price_desc';

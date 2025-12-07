@@ -67,6 +67,7 @@ const KeyboardCard: React.FC<KeyboardCardProps> = ({ keyboard }) => {
               {keyboard.keyboard_type === 'ortholinear' && '오소리니어'}
               {keyboard.keyboard_type === 'column_stagger' && '칼럼스태거'}
               {keyboard.keyboard_type === 'splay' && '스플레이'}
+              {keyboard.keyboard_type === 'dactyl' && '댁틸'}
             </span>
           )}
           {keyboard.tags?.is_wireless && (

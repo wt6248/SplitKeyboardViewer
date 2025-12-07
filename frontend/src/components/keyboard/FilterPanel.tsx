@@ -31,6 +31,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     { value: 'ortholinear', label: '오소리니어' },
     { value: 'column_stagger', label: '칼럼스태거' },
     { value: 'splay', label: '스플레이' },
+    { value: 'dactyl', label: '댁틸' },
     { value: 'none', label: '없음' },
   ];
 

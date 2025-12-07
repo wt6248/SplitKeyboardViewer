@@ -186,6 +186,7 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
           <option value="ortholinear">오소리니어</option>
           <option value="column_stagger">칼럼스태거</option>
           <option value="splay">스플레이</option>
+          <option value="dactyl">댁틸</option>
         </select>
       </div>
 

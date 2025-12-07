@@ -20,6 +20,7 @@ class KeyboardType(str, Enum):
     ortholinear = "ortholinear"  # 오소리니어
     column_stagger = "column_stagger"  # 칼럼스태거
     splay = "splay"  # 스플레이
+    dactyl = "dactyl"  # 댁틸
     none = "none"  # 없음
 
 
