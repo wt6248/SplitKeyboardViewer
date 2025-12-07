@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Keyboard, KeyRange } from '../../types/keyboard';
+import type { Keyboard, KeyRange, KeyboardType } from '../../types/keyboard';
 import { API_BASE_URL } from '../../services/api';
 
 interface KeyboardFormProps {
@@ -13,13 +13,9 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
   const [price, setPrice] = useState('');
   const [link, setLink] = useState('');
   const [keyCountRange, setKeyCountRange] = useState<KeyRange>('');
+  const [keyboardType, setKeyboardType] = useState<KeyboardType>('none');
   const [isWireless, setIsWireless] = useState(false);
-  const [hasOrtholinear, setHasOrtholinear] = useState(false);
-  const [hasTenting, setHasTenting] = useState(false);
   const [hasCursorControl, setHasCursorControl] = useState(false);
-  const [hasDisplay, setHasDisplay] = useState(false);
-  const [hasColumnStagger, setHasColumnStagger] = useState(false);
-  const [hasSplay, setHasSplay] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -30,13 +26,9 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
       setPrice(keyboard.price?.toString() || '');
       setLink(keyboard.link);
       setKeyCountRange(keyboard.key_count_range);
+      setKeyboardType(keyboard.keyboard_type);
       setIsWireless(keyboard.tags.is_wireless);
-      setHasOrtholinear(keyboard.tags.has_ortholinear);
-      setHasTenting(keyboard.tags.has_tenting);
       setHasCursorControl(keyboard.tags.has_cursor_control);
-      setHasDisplay(keyboard.tags.has_display);
-      setHasColumnStagger(keyboard.tags.has_column_stagger);
-      setHasSplay(keyboard.tags.has_splay);
       setImagePreview(`${API_BASE_URL}${keyboard.image_url}`);
     }
   }, [keyboard]);
@@ -70,13 +62,9 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
     formData.append('name', name);
     formData.append('link', link);
     formData.append('key_count_range', keyCountRange);
+    formData.append('keyboard_type', keyboardType);
     formData.append('is_wireless', isWireless.toString());
-    formData.append('has_ortholinear', hasOrtholinear.toString());
-    formData.append('has_tenting', hasTenting.toString());
     formData.append('has_cursor_control', hasCursorControl.toString());
-    formData.append('has_display', hasDisplay.toString());
-    formData.append('has_column_stagger', hasColumnStagger.toString());
-    formData.append('has_splay', hasSplay.toString());
 
     if (price) {
       formData.append('price', price);
@@ -181,6 +169,26 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
         )}
       </div>
 
+      {/* 키 배열 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          키 배열 *
+        </label>
+        <select
+          value={keyboardType}
+          onChange={(e) => setKeyboardType(e.target.value as KeyboardType)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          required
+        >
+          <option value="none">없음</option>
+          <option value="typewriter">일반</option>
+          <option value="alice">앨리스</option>
+          <option value="ortholinear">오소리니어</option>
+          <option value="column_stagger">칼럼스태거</option>
+          <option value="splay">스플레이</option>
+        </select>
+      </div>
+
       {/* 태그 */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -199,56 +207,11 @@ const KeyboardForm: React.FC<KeyboardFormProps> = ({ keyboard, onSubmit, onCance
           <label className="flex items-center">
             <input
               type="checkbox"
-              checked={hasOrtholinear}
-              onChange={(e) => setHasOrtholinear(e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">오소리니어</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={hasTenting}
-              onChange={(e) => setHasTenting(e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">틸팅</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
               checked={hasCursorControl}
               onChange={(e) => setHasCursorControl(e.target.checked)}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="ml-2 text-sm text-gray-700">커서조작</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={hasDisplay}
-              onChange={(e) => setHasDisplay(e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">디스플레이</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={hasColumnStagger}
-              onChange={(e) => setHasColumnStagger(e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">칼럼스태거</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={hasSplay}
-              onChange={(e) => setHasSplay(e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">스플레이</span>
           </label>
         </div>
       </div>
